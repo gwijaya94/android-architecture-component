@@ -12,10 +12,12 @@ class MainViewModel : ViewModel() {
     private val _restaurant = MutableLiveData<Restaurant>()
     private val _listReview = MutableLiveData<List<CustomerReviewsItem>>()
     private val _isLoading = MutableLiveData<Boolean>()
+    private val _snackbarText = MutableLiveData<Event<String>>()
 
     val restaurant: LiveData<Restaurant> = _restaurant
     val listReview: LiveData<List<CustomerReviewsItem>> = _listReview
     val isLoading: LiveData<Boolean> = _isLoading
+    val snackbarText: LiveData<Event<String>> = _snackbarText
 
     init {
         findRestaurant()
@@ -60,6 +62,7 @@ class MainViewModel : ViewModel() {
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     _listReview.value=(responseBody.customerReviews)
+                    _snackbarText.value = Event(response.body()?.message.toString())
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }
