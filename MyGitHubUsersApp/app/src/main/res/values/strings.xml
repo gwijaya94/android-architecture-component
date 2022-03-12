@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">My GitHubUsers App</string>
+    <string name="user_text">USER</string>
+    <string name="company_text">COMPANY</string>
+    <string name="location_text">LOCATION</string>
+    <string name="username_text">USERNAME</string>
+    <string name="copyright">© 2021 - GWijaya94</string>
+    <string name="repository_text">Repository</string>
+    <string name="repo_count_value">RepoCount</string>
+    <string name="follower_text">Follower</string>
+    <string name="following_text">Following</string>
+</resources>
