@@ -3,15 +3,14 @@ package id.gwijaya94.mygithubusersapp.service
 import android.content.Context
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.ANRequest
-import com.androidnetworking.interceptors.HttpLoggingInterceptor
+import com.chuckerteam.chucker.api.ChuckerInterceptor
+import okhttp3.OkHttpClient
 
 class ApiService(context: Context) {
-    private var context: Context = context
+    private val client = OkHttpClient.Builder().addInterceptor(ChuckerInterceptor(context)).build()
 
     init {
-        this.context = context
-        AndroidNetworking.initialize(context)
-        AndroidNetworking.enableLogging(HttpLoggingInterceptor.Level.BODY)
+        AndroidNetworking.initialize(context, client)
     }
 
     fun get(url: String): ANRequest.GetRequestBuilder<out ANRequest.GetRequestBuilder<*>> {

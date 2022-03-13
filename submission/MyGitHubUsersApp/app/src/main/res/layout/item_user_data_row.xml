@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardBackgroundColor="@color/github_green"
+    app:cardBackgroundColor="@color/orange"
     card_view:cardCornerRadius="10dp"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true">
@@ -36,6 +36,7 @@
             android:layout_marginStart="8dp"
             android:text="INI NAMA"
             android:textColor="@color/black"
+            android:layout_marginBottom="12dp"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
