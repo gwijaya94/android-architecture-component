@@ -38,6 +38,7 @@ class MainViewModel : ViewModel() {
 
                     override fun onError(anError: ANError) {
                         Log.wtf("error", anError.errorBody.toString())
+                        _searchData.value = null
                         _errorData.value = anError.errorBody.toString()
                         _isLoading.value = false
                     }

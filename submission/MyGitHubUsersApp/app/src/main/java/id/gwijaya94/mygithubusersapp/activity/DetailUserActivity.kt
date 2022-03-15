@@ -4,8 +4,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayoutMediator
+import id.gwijaya94.mygithubusersapp.PagerAdapter
 import id.gwijaya94.mygithubusersapp.R
 import id.gwijaya94.mygithubusersapp.databinding.ActivityDetailUserBinding
 import id.gwijaya94.mygithubusersapp.model.DetailViewModel
@@ -15,6 +18,9 @@ import id.gwijaya94.mygithubusersapp.setHeaderColor
 class DetailUserActivity : AppCompatActivity() {
     companion object {
         const val USER_NAME = "gwijaya94"
+
+        @StringRes
+        private val TAB_TITLES = intArrayOf(R.string.tab_follower, R.string.tab_following)
     }
 
     private val detailViewModel: DetailViewModel by viewModels()
@@ -41,23 +47,22 @@ class DetailUserActivity : AppCompatActivity() {
             if (it != null) {
                 userData = it
                 setUser(it)
-                binding.scrollView2.visibility = View.VISIBLE
-            } else binding.scrollView2.visibility = View.GONE
+                binding.contentWrapper.visibility = View.VISIBLE
+            } else binding.contentWrapper.visibility = View.GONE
         }
         detailViewModel.isLoading.observe(this) {
             if (it) binding.progressBar.visibility = View.VISIBLE
-            else binding.progressBar.visibility = View.INVISIBLE
+            else binding.progressBar.visibility = View.GONE
         }
         detailViewModel.errorData.observe(this) {
-            if (it != null) binding.scrollView2.visibility = android.view.View.GONE
-            else binding.scrollView2.visibility = android.view.View.VISIBLE
+            if (it != null) binding.contentWrapper.visibility = View.GONE
+            else binding.contentWrapper.visibility = View.VISIBLE
         }
-        detailViewModel.followers.observe(this) {
-
-        }
-        detailViewModel.following.observe(this) {
-
-        }
+        val sectionsPagerAdapter = PagerAdapter(this, TAB_TITLES, USER_NAME)
+        binding.viewPager.adapter = sectionsPagerAdapter
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
+        }.attach()
 
 
     }
@@ -67,9 +72,9 @@ class DetailUserActivity : AppCompatActivity() {
         Glide.with(this)
             .load(imgResource)
             .circleCrop()
-            .into(binding.profilePicture)
+            .into(binding.userSummary.profilePicture)
 
-        binding.apply {
+        binding.userSummary.apply {
             userName.text = userData.name ?: userData.login
             userUsername.text = "ID ${userData.id?.toString()}"
             userBio.text = userData.bio ?: "-"
@@ -87,5 +92,6 @@ class DetailUserActivity : AppCompatActivity() {
         }
         setHeaderColor(this, window, headerColor)
     }
+
 
 }

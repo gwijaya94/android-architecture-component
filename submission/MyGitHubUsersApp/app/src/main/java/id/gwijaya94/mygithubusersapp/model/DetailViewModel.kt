@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.androidnetworking.interfaces.ParsedRequestListener
+import com.google.gson.Gson
 import id.gwijaya94.mygithubusersapp.service.ApiService
 import org.json.JSONArray
 
@@ -25,14 +26,18 @@ class DetailViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun setContext(context: Context,userName: String) {
+    fun setContext(context: Context, userName: String) {
         api = ApiService(context)
         uri = "https://api.github.com/users/$userName"
     }
 
+//    fun getUserData() {
+//        getUserDetail()
+//        getListFollower()
+//        getListFollowing()
+//    }
+
     fun getUserDetail() {
-//        getListFollower(uri)
-//        getListFollowing(uri)
         _isLoading.value = true
         api.get(uri).build().getAsObject(
             UserDetail::class.java,
@@ -50,31 +55,51 @@ class DetailViewModel : ViewModel() {
             })
     }
 
-    private fun getListFollower() {
+    fun getListFollower() {
         api.get("${uri}/followers").build().getAsJSONArray(object : JSONArrayRequestListener {
             override fun onResponse(response: JSONArray?) {
+                if (response != null)
+                    _followers.value = processUser(response)
             }
 
             override fun onError(anError: ANError?) {
-                TODO("Not yet implemented")
+                Log.wtf("error", anError?.errorBody.toString())
+                _errorData.value = anError?.errorBody.toString()
+                _isLoading.value = false
             }
         })
     }
 
-    private fun getListFollowing() {
+    fun getListFollowing() {
         api.get("${uri}/following").build().getAsJSONArray(object : JSONArrayRequestListener {
             override fun onResponse(response: JSONArray?) {
-                TODO("Not yet implemented")
+                if (response != null)
+                    _following.value = processUser(response)
             }
 
             override fun onError(anError: ANError?) {
-                TODO("Not yet implemented")
+                Log.wtf("error", anError?.errorBody.toString())
+                _errorData.value = anError?.errorBody.toString()
+                _isLoading.value = false
             }
         })
+    }
+
+    private fun processUser(list: JSONArray): ArrayList<GithubUser> {
+        val tempArr = ArrayList<GithubUser>()
+        for (i in 0 until list.length()) {
+            if (list[i] != null) {
+                val jsonData = list.getJSONObject(i).toString()
+                val data = Gson().fromJson(jsonData, GithubUser::class.java)
+                tempArr.add(data)
+            }
+        }
+        return tempArr
     }
 
     override fun onCleared() {
         super.onCleared()
         _selectedData.value = null
     }
+
 }
