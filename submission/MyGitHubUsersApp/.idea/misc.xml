@@ -7,11 +7,12 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.16510416666666666" />
         <entry key="app/src/main/res/drawable/progress_bar_bg.xml" value="0.126" />
         <entry key="app/src/main/res/drawable/splash_screen_logo.xml" value="0.16510416666666666" />
-        <entry key="app/src/main/res/layout/activity_detail_user.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_detail_user.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.289760348583878" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/card_user_info.xml" value="0.335" />
         <entry key="app/src/main/res/layout/footer.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_list_user.xml" value="0.1921875" />
         <entry key="app/src/main/res/layout/item_user_data_row.xml" value="0.47401574803149604" />
       </map>
     </option>

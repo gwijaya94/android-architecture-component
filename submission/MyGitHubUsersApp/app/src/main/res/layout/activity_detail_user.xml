@@ -32,7 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="16dp"
-        android:paddingHorizontal="12dp"
         android:paddingVertical="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +46,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="10dp">
 
                 <ImageView
@@ -76,8 +76,8 @@
                         android:id="@+id/user_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/username_text"
                         android:layout_below="@id/user_name"
+                        android:text="@string/username_text"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -86,8 +86,8 @@
                         android:id="@+id/user_bio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
                         android:layout_below="@id/user_username"
+                        android:layout_marginBottom="10dp"
                         android:text="@string/location_text"
                         android:textColor="@color/github_grey_text" />
                 </RelativeLayout>
@@ -98,8 +98,20 @@
                 layout="@layout/card_user_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="15dp" />
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:tabTextColor="@android:color/white" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </ScrollView>
