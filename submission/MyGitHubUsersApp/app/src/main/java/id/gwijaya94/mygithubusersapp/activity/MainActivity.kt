@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
     private var headerColor = R.color.github_header
+    private var isLoading = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         mainViewModel.isLoading.observe(this) {
+            isLoading = it
             if (it) binding.progressBar.visibility = View.VISIBLE
             else binding.progressBar.visibility = View.GONE
         }
@@ -41,12 +43,13 @@ class MainActivity : AppCompatActivity() {
             val listData = ArrayList<GithubUser>()
             if (it != null) {
                 for (data in it) if (data != null) listData.add(data)
-            }
-            if (listData.size > 0) setListData(listData)
-            else binding.errText.apply {
-                text = "No Data"
-                visibility = View.VISIBLE
-            }
+                binding.rvListUsers.visibility = View.VISIBLE
+                if (listData.size > 0) setListData(listData)
+                else binding.errText.apply {
+                    text = "No Data"
+                    visibility = View.VISIBLE
+                }
+            } else binding.rvListUsers.visibility = View.GONE
 
         }
         mainViewModel.errorData.observe(this) {

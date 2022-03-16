@@ -2,6 +2,7 @@ package id.gwijaya94.mygithubusersapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,25 +15,45 @@ import id.gwijaya94.mygithubusersapp.databinding.FragmentListUserBinding
 import id.gwijaya94.mygithubusersapp.model.DetailViewModel
 import id.gwijaya94.mygithubusersapp.model.GithubUser
 
-class ListUserFragment(private val userName: String, private val type: String) : Fragment() {
+
+class ListUserFragment : Fragment() {
     private val detailViewModel: DetailViewModel by viewModels()
     private lateinit var binding: FragmentListUserBinding
+
+    private var userName: String = ""
+    private var type: String = ""
     private var noData = "No $type Data"
+    private var isFollowerTab: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        detailViewModel.setContext(requireContext(), userName)
+        val bundle = this.arguments
+        if (bundle != null) {
+            type = bundle.getString("type").toString()
+            isFollowerTab = type == resources.getString(TAB_TITLES[0])
+            userName = bundle.getString("username").toString()
 
-        if (type == resources.getString(TAB_TITLES[0])) {
-            detailViewModel.getListFollower()
-            detailViewModel.followers.observe(this) {
-                processData(it)
+            detailViewModel.setContext(requireContext(), userName)
+
+            detailViewModel.isLoading.observe(this) {
+                if (it) binding.progressBar.visibility = View.VISIBLE
+                else binding.progressBar.visibility = View.GONE
             }
-        } else detailViewModel.following.observe(this) {
-            detailViewModel.getListFollowing()
-            processData(it)
-        }
+            detailViewModel.userData.observe(this) {
+                val data = if (isFollowerTab) it.second else it.third
+                Log.d(TAG, "onCreate: $data")
+                if (data !== null) {
+                    binding.progressBar.visibility = View.GONE
+                    val listData = processData(data)
+                    checkData(listData)
+                } else binding.progressBar.visibility = View.VISIBLE
 
+            }
+        } else binding.errText.apply {
+            text = noData
+            textSize = 20f
+            visibility = View.VISIBLE
+        }
 
     }
 
@@ -44,30 +65,17 @@ class ListUserFragment(private val userName: String, private val type: String) :
         return binding.root
     }
 
-    private fun processData(data: List<GithubUser?>?) {
-        if (data == null || data.isEmpty()) {
-            binding.emptyData.apply {
-                text = noData
-                textSize = 20f
-                visibility = View.VISIBLE
-            }
-        } else {
-            setListData(data)
-            binding.emptyData.visibility = View.GONE
+    private fun checkData(listData: List<GithubUser>) {
+        if (listData.isNotEmpty()) setListData(listData)
+        else binding.errText.apply {
+            text = noData
+            textSize = 20f
+            visibility = View.VISIBLE
         }
     }
 
-    private fun filterData(list: List<GithubUser?>): ArrayList<GithubUser> {
-        val tempData = ArrayList<GithubUser>()
-        for (data in list) {
-            if (data != null) tempData.add(data)
-        }
-        return tempData
-    }
-
-    private fun setListData(listUserData: List<GithubUser?>) {
-        val listData = filterData(listUserData)
-        val listUsersAdapter = ListUserAdapter(listData)
+    private fun setListData(listUserData: List<GithubUser>) {
+        val listUsersAdapter = ListUserAdapter(listUserData)
         listUsersAdapter.setOnItemClicked(object : ListUserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: GithubUser) {
                 val moveDetailUserActivity =
@@ -84,7 +92,7 @@ class ListUserFragment(private val userName: String, private val type: String) :
     }
 
     companion object {
-        private val TAG = ListUserFragment::class.java.simpleName
+        private const val TAG = "HERE I AM >>>>>"
 
         @StringRes
         private val TAB_TITLES = intArrayOf(R.string.tab_follower, R.string.tab_following)

@@ -1,5 +1,6 @@
 package id.gwijaya94.mygithubusersapp.model
 
+import TripleMediatorLiveData
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -16,28 +17,34 @@ class DetailViewModel : ViewModel() {
     private lateinit var api: ApiService
     private lateinit var uri: String
     private val _selectedData = MutableLiveData<UserDetail?>()
-    val selectedData: LiveData<UserDetail?> = _selectedData
+    private val selectedData: LiveData<UserDetail?> = _selectedData
     private val _followers = MutableLiveData<List<GithubUser?>?>()
-    val followers: LiveData<List<GithubUser?>?> = _followers
+    private val followers: LiveData<List<GithubUser?>?> = _followers
     private val _following = MutableLiveData<List<GithubUser?>?>()
-    val following: LiveData<List<GithubUser?>?> = _following
+    private val following: LiveData<List<GithubUser?>?> = _following
     private val _errorData = MutableLiveData<String?>()
     val errorData: LiveData<String?> = _errorData
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
+    val userData = TripleMediatorLiveData(selectedData, followers, following)
+
+
     fun setContext(context: Context, userName: String) {
         api = ApiService(context)
         uri = "https://api.github.com/users/$userName"
+
+        getUserData()
     }
 
-//    fun getUserData() {
-//        getUserDetail()
-//        getListFollower()
-//        getListFollowing()
-//    }
+    private fun getUserData() {
+        getUserDetail()
+        getListFollowing()
+        getListFollower()
+    }
 
-    fun getUserDetail() {
+
+    private fun getUserDetail() {
         _isLoading.value = true
         api.get(uri).build().getAsObject(
             UserDetail::class.java,
@@ -55,7 +62,8 @@ class DetailViewModel : ViewModel() {
             })
     }
 
-    fun getListFollower() {
+
+    private fun getListFollower() {
         api.get("${uri}/followers").build().getAsJSONArray(object : JSONArrayRequestListener {
             override fun onResponse(response: JSONArray?) {
                 if (response != null)
@@ -70,7 +78,7 @@ class DetailViewModel : ViewModel() {
         })
     }
 
-    fun getListFollowing() {
+    private fun getListFollowing() {
         api.get("${uri}/following").build().getAsJSONArray(object : JSONArrayRequestListener {
             override fun onResponse(response: JSONArray?) {
                 if (response != null)

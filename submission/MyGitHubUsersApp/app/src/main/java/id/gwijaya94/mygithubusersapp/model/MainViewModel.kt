@@ -24,6 +24,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun getSearchData(userName: String) {
+        _searchData.value = null
         _isLoading.value = true
         api.get("https://api.github.com/search/users")
             .addQueryParameter("q", userName)

@@ -9,6 +9,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.iconics.utils.sizeDp
+import id.gwijaya94.mygithubusersapp.model.GithubUser
 
 
 fun getIcon(
@@ -29,4 +30,12 @@ fun setHeaderColor(context: Context, window: Window, color: Int) {
             navigationBarColor = context.resources.getColor(color)
         }
     }
+}
+
+fun processData(data: List<GithubUser?>?): ArrayList<GithubUser> {
+    val listData = ArrayList<GithubUser>()
+    if (data != null) {
+        for (it in data) if (it != null) listData.add(it)
+    }
+    return listData
 }

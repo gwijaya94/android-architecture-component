@@ -12,7 +12,9 @@ import id.gwijaya94.mygithubusersapp.PagerAdapter
 import id.gwijaya94.mygithubusersapp.R
 import id.gwijaya94.mygithubusersapp.databinding.ActivityDetailUserBinding
 import id.gwijaya94.mygithubusersapp.model.DetailViewModel
+import id.gwijaya94.mygithubusersapp.model.GithubUser
 import id.gwijaya94.mygithubusersapp.model.UserDetail
+import id.gwijaya94.mygithubusersapp.processData
 import id.gwijaya94.mygithubusersapp.setHeaderColor
 
 class DetailUserActivity : AppCompatActivity() {
@@ -25,7 +27,9 @@ class DetailUserActivity : AppCompatActivity() {
 
     private val detailViewModel: DetailViewModel by viewModels()
     private lateinit var binding: ActivityDetailUserBinding
-    private lateinit var userData: UserDetail
+    private var userData: UserDetail? = null
+    private var followers: List<GithubUser?>? = null
+    private var following: List<GithubUser?>? = null
     private var headerColor = R.color.github_header
 
     override fun onSupportNavigateUp(): Boolean {
@@ -39,31 +43,34 @@ class DetailUserActivity : AppCompatActivity() {
         detailViewModel.setContext(this, userNameExtra)
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
 
-        detailViewModel.getUserDetail()
         setContentView(binding.root)
         setUp(userNameExtra)
+        detailViewModel.userData.observe(this) {
+            val mUserData = it.first
+            var mFollowers = processData(it.second)
+            var mFollowing = processData(it.third)
 
-        detailViewModel.selectedData.observe(this) {
-            if (it != null) {
-                userData = it
-                setUser(it)
+            if (mUserData != null) {
+                userData = mUserData
+                setUser(mUserData)
                 binding.contentWrapper.visibility = View.VISIBLE
-            } else binding.contentWrapper.visibility = View.GONE
+                binding.progressBar.visibility = View.GONE
+            } else {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.contentWrapper.visibility = View.GONE
+            }
         }
-        detailViewModel.isLoading.observe(this) {
-            if (it) binding.progressBar.visibility = View.VISIBLE
-            else binding.progressBar.visibility = View.GONE
-        }
+
         detailViewModel.errorData.observe(this) {
             if (it != null) binding.contentWrapper.visibility = View.GONE
             else binding.contentWrapper.visibility = View.VISIBLE
         }
-        val sectionsPagerAdapter = PagerAdapter(this, TAB_TITLES, USER_NAME)
+
+        val sectionsPagerAdapter = PagerAdapter(this, TAB_TITLES, userNameExtra)
         binding.viewPager.adapter = sectionsPagerAdapter
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
-
 
     }
 
