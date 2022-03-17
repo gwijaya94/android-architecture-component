@@ -1,6 +1,8 @@
 package id.gwijaya94.mygithubusersapp.activity
 
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -84,10 +86,15 @@ class DetailUserActivity : AppCompatActivity() {
         binding.userSummary.apply {
             userName.text = userData.name ?: userData.login
             userUsername.text = "ID ${userData.id?.toString()}"
-            userBio.text = userData.bio ?: "-"
-            userInfo.followerCountValue.text = userData.followers.toString()
-            userInfo.followingCountValue.text = userData.following.toString()
-            userInfo.repoCountValue.text = userData.publicRepos.toString()
+            userCompany.text = userData.company ?: "-"
+            userLocation.text = userData.location ?: "-"
+            userRepo.apply {
+                text = userData.htmlUrl ?: "-"
+                setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(userData.htmlUrl))
+                    startActivity(intent)
+                }
+            }
         }
     }
 
