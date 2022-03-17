@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_copyright_icon"
         android:layout_marginStart="10dp"
+        android:textColor="@color/black"
         android:layout_toEndOf="@id/tv_copyright_icon"
         android:text="@string/copyright"
         android:textAlignment="center"

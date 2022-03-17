@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import id.gwijaya94.mygithubusersapp.databinding.ItemUserDataRowBinding
-import id.gwijaya94.mygithubusersapp.model.User
+import id.gwijaya94.mygithubusersapp.model.GithubUser
 
-class ListUserAdapter(private val listUsers: List<User>) :
+class ListUserAdapter(private val listUsers: List<GithubUser>) :
     RecyclerView.Adapter<ListUserAdapter.ListViewHolder>() {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
@@ -21,7 +21,7 @@ class ListUserAdapter(private val listUsers: List<User>) :
         RecyclerView.ViewHolder(binding.root)
 
     interface OnItemClickCallback {
-        fun onItemClicked(data: User)
+        fun onItemClicked(data: GithubUser)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -33,16 +33,15 @@ class ListUserAdapter(private val listUsers: List<User>) :
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val userData = listUsers[position]
         val parentContext = holder.itemView.context
-        val imgResource =
-            parentContext.resources.getIdentifier(userData.avatar, null, parentContext.packageName)
+        val imgResource =userData.avatarUrl
 
         Glide.with(parentContext).load(imgResource).circleCrop()
             .into(holder.binding.imgItemPhoto)
         holder.binding.apply {
-            listItemDesc.text = "@${userData.username.lowercase()}"
-            listItemName.text = userData.name
-            imgItemPhoto.contentDescription = userData.name
-            repoValue.text = userData.repository
+            listItemDesc.text = "ID ${userData.id.toString()}"
+            listItemName.text = userData.login
+            imgItemPhoto.contentDescription = userData.login
+            repoValue.text = "-"
 
         }
         holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(userData) }

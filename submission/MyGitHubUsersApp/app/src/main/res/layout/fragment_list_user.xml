@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/github_bg"
-    tools:context=".activity.MainActivity">
+    tools:context=".ListUserFragment">
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -34,15 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingHorizontal="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/footer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <include
-        android:id="@+id/footer"
-        layout="@layout/footer"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
